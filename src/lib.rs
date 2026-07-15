@@ -1,6 +1,5 @@
 //! A `DearImGui` inspired gui lib tailored run on the cpu and work with mirl: `MirlImGui` (You can thank me for my creativity later)
 #![feature(slice_swap_unchecked)]
-
 #![feature(prelude_import)]
 #[allow(unreachable_pub)]
 #[allow(unused_imports)]

@@ -47,7 +47,7 @@ pub trait AssetServer {
     ) -> Option<Self::BufferHolder>;
 }
 /// This type purely exists because rust is too stupid to just one the defined default generics
-/// 
+///
 /// If you wish to configure the map type, use [`DefaultAssetServer`]
 pub type DefaultAssetServerUsingHashMap = DefaultAssetServer<
     std::collections::HashMap<(usize, usize), usize>,
