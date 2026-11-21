@@ -1,6 +1,6 @@
 //! Draw text
 
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 /// Display text
 pub struct TextDisplay {
     /// The text to be displayed
@@ -8,9 +8,9 @@ pub struct TextDisplay {
     /// The color of the text to be displayed
     pub _color: u32,
     /// The size of the text
-    pub _size: f32,
+    pub _size: mirl_narrowed_floats::NonZeroPositiveF32,
     /// How much the text needs to be stretched to fit in the bounds
-    pub _stretch: f32,
+    pub _stretch: mirl_narrowed_floats::NonZeroPositiveF32,
     /// Target size
     pub _target_size: (i32, i32),
 }

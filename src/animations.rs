@@ -15,10 +15,10 @@ pub enum AnimationBehaviorOnEnd {
     Reverse,
 }
 /// Settings for animated frames
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Hash)]
 pub struct AnimatedSettings {
     /// The FPS
-    pub _frames_per_second: f32,
+    pub _frames_per_second: mirl_narrowed_floats::NonZeroPositiveFiniteF32,
     /// The SPF
     pub _seconds_per_frame: std::time::Duration,
     /// What should happen when the animation idx overflows
@@ -31,38 +31,40 @@ pub struct AnimatedSettings {
     pub _originally_reverse: bool,
 }
 impl AnimatedSettings {
-    /// Create a new instance of
-    ///
-    /// # Errors
-    /// When the given `1/frames per second` are not convertible to a [`std::time::Duration`]
-    pub fn new_from_f32<T: IntoPatch<f32>>(
-        frames_per_second: T,
-        reverse: bool,
-        behavior: AnimationBehaviorOnEnd,
-    ) -> Result<Self, std::time::TryFromFloatSecsError> {
-        let f = frames_per_second.into_value();
-        Ok(Self {
-            _frames_per_second: f,
-            _seconds_per_frame: std::time::Duration::try_from_secs_f32(1.0 / f)?,
-            _behavior: behavior,
-            _reverse: reverse,
-            _originally_reverse: reverse,
-        })
-    }
+    // /// Create a new instance of
+    // ///
+    // /// # Errors
+    // /// When the given `1/frames per second` are not convertible to a [`std::time::Duration`]
+    // pub fn new_from_f32<T: IntoPatch<f32>>(
+    //     frames_per_second: T,
+    //     reverse: bool,
+    //     behavior: AnimationBehaviorOnEnd,
+    // ) -> Result<Self, std::time::TryFromFloatSecsError> {
+    //     let f = frames_per_second.into_value();
+    //     Ok(Self {
+    //         _frames_per_second: f,
+    //         _seconds_per_frame: std::time::Duration::try_from_secs_f32(1.0 / f)?,
+    //         _behavior: behavior,
+    //         _reverse: reverse,
+    //         _originally_reverse: reverse,
+    //     })
+    // }
     #[must_use]
     /// Create a new instance of
     pub fn new_from_duration(
         seconds_per_frame: std::time::Duration,
         reverse: bool,
         behavior: AnimationBehaviorOnEnd,
-    ) -> Self {
-        Self {
-            _frames_per_second: 1.0 / seconds_per_frame.as_secs_f32(),
+    ) -> Option<Self> {
+        Some(Self {
+            _frames_per_second: mirl_narrowed_floats::NonZeroPositiveFinite::<_>::new(
+                1.0 / seconds_per_frame.as_secs_f32(),
+            )?,
             _seconds_per_frame: seconds_per_frame,
             _behavior: behavior,
             _reverse: reverse,
             _originally_reverse: reverse,
-        }
+        })
     }
 }
 impl AnimatedSettings {
